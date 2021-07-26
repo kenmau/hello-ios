@@ -395,3 +395,34 @@ print(jack.compareTo(rank: ace))
 if let convertedRank = Rank(rawValue: 3) {
     let threeDescription = convertedRank.simpleDescription()
 }
+
+
+enum Suit {
+    case spades, hearts, diamonds, clubs
+    
+    func simpleDescription() -> String {
+        switch self {
+        case .spades:
+            return "spades"
+        case .hearts:
+            return "hearts"
+        case .diamonds:
+            return "diamonds"
+        case .clubs:
+            return "clubs"
+        }
+    }
+    
+    func colour() -> String {
+        switch self {
+        case .spades, .clubs:
+            return "black"
+        case .hearts, .diamonds:
+            return "red"
+        }
+    }
+}
+
+let hearts = Suit.hearts
+let heartsDescription = hearts.simpleDescription()
+let heartsColor = hearts.colour()
