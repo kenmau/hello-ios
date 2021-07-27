@@ -352,7 +352,7 @@ let optionalSquare: Square? = Square(sideLength: 2.5, name: "Optional Square")
 let sideLength = optionalSquare?.sideLength
 
 // Enum
-enum Rank: Int {
+enum Rank: Int, CaseIterable {
     case ace = 1
     case two, three, four, five, six, seven, eight, nine, ten
     case jack, queen, king
@@ -397,7 +397,7 @@ if let convertedRank = Rank(rawValue: 3) {
 }
 
 
-enum Suit {
+enum Suit: CaseIterable {
     case spades, hearts, diamonds, clubs
     
     func simpleDescription() -> String {
@@ -426,3 +426,177 @@ enum Suit {
 let hearts = Suit.hearts
 let heartsDescription = hearts.simpleDescription()
 let heartsColor = hearts.colour()
+
+
+enum ServerResponse {
+    case result(String, String)
+    case failure(String)
+    case unknown(String)
+}
+
+let success = ServerResponse.result("6:00 am", "8:09pm")
+let failure = ServerResponse.failure("Out of cheese.")
+let unknown = ServerResponse.unknown("Unknown Error")
+
+switch success {
+case let .result(sunrise, sunset):
+    print("Sunrise is at \(sunrise) and sunset is at \(sunset).")
+case let .failure(message):
+    print("Failure... \(message)")
+case let .unknown(message):
+    print("That wasa unexpected... \(message)")
+}
+
+// structs are always copied when they are passed around
+// classes are passed by reference
+
+struct Card {
+    var rank: Rank
+    var suit: Suit
+    func simpleDescription() -> String {
+        return "The \(rank.simpleDescription()) of \(rank.simpleDescription())"
+    }
+}
+
+let threeOfSpades = Card(rank: .three, suit: .spades)
+let threeOfSpadesDescription = threeOfSpades.simpleDescription()
+
+var deckOfCards = [Card]()
+for suit in Suit.allCases {
+    for rank in Rank.allCases {
+        deckOfCards.append(Card(rank: rank, suit: suit))
+    }
+}
+
+print(deckOfCards)
+print(deckOfCards.count)
+
+deckOfCards.forEach { card in
+    print("\(card.rank) of \(card.suit)")
+}
+
+// protocol
+protocol ExampleProtocol {
+    var simpleDescription: String { get }
+    mutating func adjust()
+    mutating func clear()
+}
+
+class SimpleClass: ExampleProtocol {
+    var simpleDescription: String = "A very simple class"
+    var anotherProperty: Int = 69105
+    func adjust() {
+        simpleDescription += "  Now 100% adjusted."
+    }
+    func clear() {
+        simpleDescription = ""
+    }
+}
+
+var a = SimpleClass()
+a.adjust()
+let aDescription = a.simpleDescription
+
+struct SimpleStructure: ExampleProtocol {
+    var simpleDescription: String = "A simple structure"
+    mutating func adjust() {
+        simpleDescription += " (adjusted)"
+    }
+    func clear() {
+        // Cannot mutate because structs are immutable
+        // simpleDescription = ""
+    }
+}
+var b = SimpleStructure()
+b.adjust()
+let bDescription = b.simpleDescription
+
+extension Int: ExampleProtocol {
+    var simpleDescription: String {
+        return "The number \(self)"
+    }
+    mutating func adjust() {
+        self += 42
+    }
+    mutating func clear() {
+        self = 0
+    }
+}
+
+print (7.simpleDescription)
+
+extension Double {
+    var absoluteValue: Int {
+        return Int(self)
+    }
+}
+
+2.20.absoluteValue
+
+
+let protocolValue: ExampleProtocol = a
+print(protocolValue.simpleDescription)
+
+//print(protocolValue.anotherProperty)
+
+
+// Error Handling
+
+enum PrinterError: Error {
+    case outOfPaper
+    case noToner
+    case onFire
+}
+
+func send(job: Int, toPrinter printerName: String) throws -> String {
+    if printerName == "Never Has Toner" {
+        throw PrinterError.noToner
+    }
+    
+    return "Job sent"
+}
+
+do {
+    let printerResponse = try send(job: 1040, toPrinter: "Never Has Toner")
+    print(printerResponse)
+} catch PrinterError.onFire {
+    print("I'll just put this over here, with the rest of the fire.")
+} catch let printerError as PrinterError {
+    print("Printer Error \(printerError)")
+} catch {
+    print(error)
+}
+
+let printerSuccess = try? send(job: 1884, toPrinter: "Mergenthaler")
+let printerFailure = try? send(job: 1885, toPrinter: "Never Has Toner")
+
+func makeArray<Whatever>(repeating item: Whatever, numberOfTimes: Int) -> [Whatever] {
+    var result = [Whatever]()
+    for _ in 0..<numberOfTimes {
+        result.append(item)
+    }
+    return result
+}
+
+makeArray(repeating: "knock", numberOfTimes: 4)
+
+enum OptionalValue<Wrapped> {
+    case none
+    case some(Wrapped)
+}
+
+var possibleInteger: OptionalValue<Int> = .none
+possibleInteger = .some(100)
+
+func anyCommonElements<T: Sequence, U: Sequence>(_ lhs: T, _ rhs: U) -> Bool where T.Element: Equatable, T.Element == U.Element {
+    for lhsItem in lhs {
+        for rhsItem in rhs {
+            if lhsItem == rhsItem {
+                return true
+            }
+        }
+    }
+    return false
+}
+
+anyCommonElements([1,2,3], [2])
