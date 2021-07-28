@@ -17,14 +17,17 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+    
         
-        // Image Literal
-        diceImageViewOne.image = #imageLiteral(resourceName: "DiceSix")
-        diceImageViewOne.alpha = 0.5
-        
-        diceImageViewTwo.image = UIImage(named: "DiceTwo")
+    
     }
-
-
+    
+    
+    @IBAction func rollButtonPressed(_ sender: UIButton) {
+        let diceImages = [UIImage(named: "DiceOne"), UIImage(named: "DiceTwo"), UIImage(named: "DiceThree"), UIImage(named: "DiceFour"), UIImage(named: "DiceFive"), UIImage(named: "DiceSix")]
+        
+        diceImageViewOne.image = diceImages.randomElement()!
+        diceImageViewTwo.image = diceImages[Int.random(in: 0...5)]
+    }
 }
 
