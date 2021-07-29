@@ -40,5 +40,3 @@ var emptyString = ""
 var tuple = ("hello", 0)
 print (tuple.1)
 
-// Arrays ordered
-// Sets/Dictionaries unordered
