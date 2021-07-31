@@ -33,3 +33,43 @@ if player1Username != nil {
     print(player1Username!)
 }
 
+// Structs = Blueprint
+struct Town {
+    // Variables (Properties)
+    let name: String
+    var citizens: [String]
+    var resources: [String: Int]
+    
+    init(name: String, citizens: [String], resources: [String: Int]) {
+        self.name = name
+        self.citizens = citizens
+        self.resources = resources
+    }
+    
+    // Behaviours of structure
+    // Functions (Method)
+    func fortify() {
+        print("Defences increased!")
+    }
+}
+
+var anotherTown = Town(name: "Ken Land", citizens: ["Tom Hanks"], resources: ["Coconuts": 100])
+
+var ghostTown = Town(name: "Ghosty", citizens: [], resources: ["Tumbleweed": 1])
+
+anotherTown.citizens.append("Wilson")
+ghostTown.fortify()
+
+
+
+//// Created a new copy of the town structure
+//// Initialization
+//var myTown = Town()
+//
+//print(myTown.citizens)
+//print("\(myTown.name) has \(myTown.resources["Grain"]) bags of grain.")
+//
+//myTown.citizens.append("Keanu Reeves")
+//print(myTown.citizens.count)
+//
+//myTown.fortify()
