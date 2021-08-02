@@ -73,3 +73,48 @@ ghostTown.fortify()
 //print(myTown.citizens.count)
 //
 //myTown.fortify()
+
+// Classes
+//
+
+
+let myOptional: String?
+myOptional = nil
+
+//1. Force Unwrap
+//var text: String = myOptional!
+
+var text: String
+
+//2. Check for nil
+if myOptional != nil {
+    text = myOptional!
+    print(text)
+} else {
+    print("myOptional was found to be nil")
+}
+
+// 3. Optional Binding
+if let safeOptional = myOptional {
+    text = safeOptional // no need to unwrap because safeOptional is already unwrapped
+    print(text)
+}
+
+// 4. Nil Coalescing
+text = myOptional ?? "I am the default value"
+print(text)
+
+struct MyOptional {
+    var property = 123
+    func method() {
+        print("I am struct's method")
+    }
+}
+
+
+// 5. Optional Chaing
+let structOptional: MyOptional?
+structOptional = nil
+
+structOptional?.method()
+print(structOptional?.property)
