@@ -1,3 +1,6 @@
+
+// Subclass has all the properties of a superclass
+
 class Dragon: Enemy {
     var wingSpan = 2
     

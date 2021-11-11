@@ -7,6 +7,11 @@ skeleton1.attack()
 // copy by reference
 let skeleton2 = skeleton1
 
+let skeleton3 = Enemy()
+print(skeleton3.health)
+skeleton3.move()
+skeleton3.attack()
+
 // Structs vs Classes?
 // Classes:
 // - can inherit from superclass
