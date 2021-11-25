@@ -15,7 +15,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var heightSlider: UISlider!
     @IBOutlet weak var weightSlider: UISlider!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -33,12 +32,15 @@ class ViewController: UIViewController {
     }
     
     @IBAction func calculatePressed(_ sender: UIButton) {
-        print(heightSlider.value)
-        print(weightSlider.value)
+        let height = heightSlider.value
+        let weight = weightSlider.value
         
-//        let bmi = weightSlider.value / (heightSlider.value * heightSlider.value)
-        let bmi = weightSlider.value / pow(heightSlider.value, 2)
-        print("BMI is \(bmi)")
+        let bmi = weight / pow(height, 2)
+        print("BMI = \(bmi)")
+        
+        let secondVC = SecondViewController()
+        secondVC.bmiValue = String(format: "%.1f", bmi)
+        self.present(secondVC, animated: true, completion: nil)
     }
 }
 
