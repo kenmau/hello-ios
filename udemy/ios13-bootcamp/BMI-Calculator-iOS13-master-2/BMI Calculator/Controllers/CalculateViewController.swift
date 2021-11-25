@@ -9,13 +9,15 @@
 import UIKit
 
 class CalculateViewController: UIViewController {
+    
+    var calculatorBrain = CalculatorBrain()
+    
     @IBOutlet weak var heightLabel: UILabel!
     @IBOutlet weak var weightLabel: UILabel!
     
     @IBOutlet weak var heightSlider: UISlider!
     @IBOutlet weak var weightSlider: UISlider!
     
-    var bmiValue = "0.0"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,13 +39,11 @@ class CalculateViewController: UIViewController {
         let height = heightSlider.value
         let weight = weightSlider.value
         
-        let bmi = weight / pow(height, 2)
-        bmiValue = String(format: "%.1f", bmi)
-        
-        print("BMI = \(bmi)")
+        calculatorBrain.calculateBMI(height: Double(height), weight: Double(weight))
         
         performSegue(withIdentifier: "goToResult", sender: self)
         
+        // Another way to transition to another view controller
 //        let secondVC = SecondViewController()
 //        secondVC.bmiValue = String(format: "%.1f", bmi)
 //        self.present(secondVC, animated: true, completion: nil)
@@ -53,7 +53,7 @@ class CalculateViewController: UIViewController {
         if segue.identifier == "goToResult" {
             // forced(!) downcasting
             let destinationVC = segue.destination as! ResultsViewController
-            destinationVC.bmiValue = bmiValue
+            destinationVC.bmiValue = calculatorBrain.getBMIValue()
         }
     }
 }
