@@ -14,17 +14,25 @@ class ViewController: UIViewController {
     // ViewController has a reference to the ViewModel
     private var employeeViewModel: EmployeeViewModel
     
-    private var dataSource: EmployeeTableViewDataSource
+    private var dataSource: EmployeeTableViewDataSource<EmployeeTableViewCell, EmployeeData>!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        callToViewModelForUIUpdate()
     }
     
     func callToViewModelForUIUpdate() {
         self.employeeViewModel = EmployeeViewModel()
+        self.employeeViewModel.bindEmployeeViewModelToController = {
+            self.updateDataSource()
+        }
     }
 
+    func updateDataSource() {
+        self.dataSource = EmployeeTableViewDataSource(cell)
+    }
 
 }
 
+
+class EmployeeTableViewDataSource<CELL
