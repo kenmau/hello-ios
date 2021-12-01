@@ -34,10 +34,37 @@ import UIKit.UIImage
 
 // Public to be accessible for testing
 public class WeatherViewModel {
-  static private let defaultAddress = "McGaheysville, VA"
+  static private let defaultAddress = "Toronto, ON"
   private let geocoder = LocationGeocoder()
   
   let locationName = Box("Loading...")
+  let date = Box(" ")
+  let icon: Box<UIImage?> = Box(nil)
+  let summary = Box(" ")
+  let forecastSummary = Box(" ")
+
+  //  Different Methods to bind view model outputs to the view (https://www.raywenderlich.com/6733535-ios-mvvm-tutorial-refactoring-from-mvc)
+  //  Key-Value Observing or KVO: A mechanism for using key paths to observe a property and get notifications when that property changes.
+  //  Functional Reactive Programming or FRP: A paradigm for processing events and data as streams. Apple’s new Combine framework is its approach to FRP. RxSwift and ReactiveSwift are two popular frameworks for FRP.
+  //  Delegation: Using delegate methods to pass notifications when values change.
+  //  Boxing: Using property observers to notify observers that a value has changed.
+
+  
+  private let dateFormatter: DateFormatter = {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "EEEE, MMM d"
+    return dateFormatter
+  }()
+  
+  private let tempFormatter: NumberFormatter = {
+    let tempFormatter = NumberFormatter()
+    tempFormatter.numberStyle = .none
+    return tempFormatter
+  }()
+  
+  init() {
+    changeLocation(to: Self.defaultAddress)
+  }
   
   func changeLocation(to newLocation: String) {
     locationName.value = "New Location Loading..."
@@ -48,6 +75,12 @@ public class WeatherViewModel {
         self.fetchWeatherForLocation(location)
         return
       }
+      
+      self.locationName.value = "Not Found"
+      self.date.value = ""
+      self.icon.value = nil
+      self.summary.value = ""
+      self.forecastSummary.value = ""
     })
   }
   
@@ -61,7 +94,13 @@ public class WeatherViewModel {
         else {
           return
         }
-      
+        
+        // Formats the weather items for the view to present
+        self.date.value = self.dateFormatter.string(from: weatherData.date)
+        self.icon.value = UIImage(named: weatherData.iconName)
+        let temp = self.tempFormatter.string(from: weatherData.currentTemp as NSNumber) ?? ""
+        self.summary.value = "\(weatherData.description) - \(temp)℉"
+        self.forecastSummary.value = "\nSummary: \(weatherData.description)"
     }
   }
 }
