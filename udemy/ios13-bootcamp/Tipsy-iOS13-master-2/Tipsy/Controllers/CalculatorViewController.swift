@@ -9,6 +9,8 @@
 import UIKit
 
 class CalculatorViewController: UIViewController {
+    var tipViewModel = TipViewModel()
+    
     @IBOutlet weak var billTextField: UITextField!
     @IBOutlet weak var zeroPctButton: UIButton!
     @IBOutlet weak var tenPctButton: UIButton!
@@ -45,9 +47,20 @@ class CalculatorViewController: UIViewController {
     
     @IBAction func calculatePressed(_ sender: UIButton) {
         let billTotal: Double = Double(billTextField.text ?? "") ?? 0
-        let amountOwedPerPerson: Double = billTotal * (1 + tipSelected) / Double(splitNumber)
         
-        print(String(format: "%.2f", amountOwedPerPerson))
+        tipViewModel.calculateTip(withTotal: billTotal, for: splitNumber, withTipPct: tipSelected)
+        
+        performSegue(withIdentifier: "calculateToResults", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "calculateToResults" {
+            let destinationVC = segue.destination as! ResultsViewController
+            
+            destinationVC.totalPerPerson = tipViewModel.getAmountOwedPerPerson()
+            destinationVC.numberOfPeople = tipViewModel.getNumberOfPeople()
+            destinationVC.tipPercentage = tipViewModel.getTipPercentage()
+        }
     }
 }
 
