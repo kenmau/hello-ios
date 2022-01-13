@@ -11,6 +11,7 @@ import UIKit
 class TodoListViewController: UITableViewController {
     
     var itemArray = ["Groceries", "Car Wash", "Some other todo"]
+    let defaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,6 +22,10 @@ class TodoListViewController: UITableViewController {
         appearance.backgroundColor = .systemTeal
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
+        
+        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+            itemArray = items
+        }
     }
     
     //MARK: - UITableViewDataSource
@@ -60,6 +65,7 @@ class TodoListViewController: UITableViewController {
             // What will happen once the uesr clicks the add item button on the UI alert
             if let textFieldText = textField.text, textFieldText != "" {
                 self.itemArray.append(textFieldText)
+                self.defaults.set(self.itemArray, forKey: "TodoListArray")
                 self.tableView.reloadData()
             }
         }
@@ -72,7 +78,5 @@ class TodoListViewController: UITableViewController {
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
-    
-
 }
 
