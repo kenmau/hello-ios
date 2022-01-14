@@ -67,3 +67,68 @@ func hasAllUniqueCharactersDict(_ str: String) -> Bool {
     }
     return true
 }
+
+// 1.3 URLify
+
+//let stringToURLify = "Hello World My Name Is Ken "
+//urlify(stringToURLify)
+//
+//
+//
+//func urlify(_ str: String) -> String {
+//    let oldStr = str
+//    for (index, c) in oldStr.enumerated() {
+//        if c == " " {
+//            str.insert("%", at: index)
+//            str.insert("2", at: index+1)
+//            str.insert("0", at: index+2)
+//        }
+//    }
+//
+//    return str
+//}
+
+
+// 1.5 One Away
+
+let str1 = "pale"
+let str2 = "ple"
+
+oneAway(str1, str2)
+
+func oneAway(_ str1: String, _ str2: String) -> Bool {
+    
+    // order matters
+    if str1 == str2 {
+        return false
+    }
+    
+    // if string lengths differ by 1: add/remove
+    if abs(str1.count - str2.count) == 1 {
+        var diff = false
+        
+        let str1Bigger = str1.count > str2.count
+        
+        for (index, c) in str1.enumerated() {
+            if str1.index == str2[index] {
+                continue
+            } else if diff == false {
+                diff = true
+            } else {
+                return false
+            }
+        }
+    }
+    
+    // if string lenths same: different character
+    else if str1.count == str2.count {
+        
+    }
+    
+    else {
+        return false
+    }
+    
+    // return true if only 1 add, modify, or remove
+    return true
+}
