@@ -10,7 +10,7 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
     
-    var itemArray = ["Groceries", "Car Wash", "Some other todo"]
+    var itemArray = [Item]()
     let defaults = UserDefaults.standard
 
     override func viewDidLoad() {
@@ -23,9 +23,44 @@ class TodoListViewController: UITableViewController {
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
         
-        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
-            itemArray = items
-        }
+        let newItem = Item(title: "Groceries")
+        itemArray.append(newItem)
+        
+        let newItem2 = Item(title: "Buy Eggs")
+        itemArray.append(newItem2)
+        
+        let newItem3 = Item(title: "Buy Milk")
+        itemArray.append(newItem3)
+        
+        let newItem4 = Item(title: "blah")
+        itemArray.append(newItem4)
+        
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+//        itemArray.append(newItem4)
+        
+        
+//        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+//            itemArray = items
+//        }
     }
     
     //MARK: - UITableViewDataSource
@@ -37,7 +72,11 @@ class TodoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         
-        cell.textLabel?.text = itemArray[indexPath.row]
+        let item = itemArray[indexPath.row]
+        
+        cell.textLabel?.text = item.title
+        
+        cell.accessoryType = item.done ? .checkmark : .none
         
         return cell
     }
@@ -47,9 +86,13 @@ class TodoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        print(itemArray[indexPath.row])
         
-        let cellAccessoryType = tableView.cellForRow(at: indexPath)?.accessoryType
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
-        tableView.cellForRow(at: indexPath)?.accessoryType = cellAccessoryType == .checkmark ? .none : .checkmark
+        tableView.reloadData()
+        
+//        let cellAccessoryType = tableView.cellForRow(at: indexPath)?.accessoryType
+//
+//        tableView.cellForRow(at: indexPath)?.accessoryType = cellAccessoryType == .checkmark ? .none : .checkmark
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -64,7 +107,9 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { action in
             // What will happen once the uesr clicks the add item button on the UI alert
             if let textFieldText = textField.text, textFieldText != "" {
-                self.itemArray.append(textFieldText)
+                let newItem = Item(title: textFieldText)
+                
+                self.itemArray.append(newItem)
                 self.defaults.set(self.itemArray, forKey: "TodoListArray")
                 self.tableView.reloadData()
             }
