@@ -14,7 +14,8 @@ class TodoListViewController: UITableViewController {
     var itemArray = [Item]()
     let defaults = UserDefaults.standard
     
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+    // This is for saving documents when using Codable
+//    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
     // For Core Data
     let context = ((UIApplication.shared.delegate) as! AppDelegate).persistentContainer.viewContext
@@ -24,7 +25,7 @@ class TodoListViewController: UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        print(dataFilePath)
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
