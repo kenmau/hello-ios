@@ -12,10 +12,14 @@ class TodoListViewController: UITableViewController {
     
     var itemArray = [Item]()
     let defaults = UserDefaults.standard
+    
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        print(dataFilePath)
         
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -23,44 +27,11 @@ class TodoListViewController: UITableViewController {
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
         
-        let newItem = Item(title: "Groceries")
-        itemArray.append(newItem)
-        
-        let newItem2 = Item(title: "Buy Eggs")
-        itemArray.append(newItem2)
-        
-        let newItem3 = Item(title: "Buy Milk")
-        itemArray.append(newItem3)
-        
-        let newItem4 = Item(title: "blah")
-        itemArray.append(newItem4)
-        
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-//        itemArray.append(newItem4)
-        
-        
-//        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+//        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
 //            itemArray = items
 //        }
+        
+        loadItems()
     }
     
     //MARK: - UITableViewDataSource
@@ -84,15 +55,12 @@ class TodoListViewController: UITableViewController {
     //MARK: - UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        print(itemArray[indexPath.row])
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
-        tableView.reloadData()
+        self.saveItems()
         
-//        let cellAccessoryType = tableView.cellForRow(at: indexPath)?.accessoryType
-//
-//        tableView.cellForRow(at: indexPath)?.accessoryType = cellAccessoryType == .checkmark ? .none : .checkmark
+        tableView.reloadData()
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -110,8 +78,8 @@ class TodoListViewController: UITableViewController {
                 let newItem = Item(title: textFieldText)
                 
                 self.itemArray.append(newItem)
-                self.defaults.set(self.itemArray, forKey: "TodoListArray")
-                self.tableView.reloadData()
+                
+                self.saveItems()
             }
         }
         
@@ -122,6 +90,34 @@ class TodoListViewController: UITableViewController {
         
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
+    }
+    
+    func saveItems() {
+        let encoder = PropertyListEncoder()
+        
+        do {
+            let data = try encoder.encode(self.itemArray)
+            try data.write(to: self.dataFilePath!)
+        } catch {
+            print("Error: \(error)")
+        }
+        
+        self.tableView.reloadData()
+    }
+    
+    func loadItems() {
+        do {
+            if let data = try? Data(contentsOf: dataFilePath!) {
+                let decoder = PropertyListDecoder()
+                do {
+                    itemArray = try decoder.decode([Item].self, from: data)
+                } catch {
+                    print(error)
+                }
+            }
+        } catch {
+            print(error)
+        }
     }
 }
 
