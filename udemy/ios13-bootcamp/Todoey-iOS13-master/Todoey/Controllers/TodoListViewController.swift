@@ -37,7 +37,7 @@ class TodoListViewController: UITableViewController {
 //            itemArray = items
 //        }
         
-//        loadItems()
+        loadItems()
     }
     
     //MARK: - UITableViewDataSource
@@ -123,7 +123,15 @@ class TodoListViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-//    func loadItems() {
+    func loadItems() {
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        do {
+            itemArray = try context.fetch(request) // Output is array of items stored in persistent container
+        } catch {
+            print("Error fetching data from context \(error)")
+        }
+        
+        // Using Codable
 //        do {
 //            if let data = try? Data(contentsOf: dataFilePath!) {
 //                let decoder = PropertyListDecoder()
@@ -136,6 +144,6 @@ class TodoListViewController: UITableViewController {
 //        } catch {
 //            print(error)
 //        }
-//    }
+    }
 }
 
