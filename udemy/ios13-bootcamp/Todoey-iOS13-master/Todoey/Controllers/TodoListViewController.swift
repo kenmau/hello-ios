@@ -62,6 +62,8 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        itemArray[indexPath.row].setValue("Completed", forKey: "title")
+        
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
         self.saveItems()
